@@ -1,0 +1,28 @@
+import pyautogui # Library for mouse and keyboard controls.
+import time 
+from PIL import ImageGrab # Library used to grab image colors/screenshots
+
+def get_pixel_color(x, y):
+    return ImageGrab.grab().load()[x, y]
+
+def main():
+    print("Monitoring started. Move your cursor to a target and wait for a color change.")
+    time.sleep(3)  # 3 second delay allowing user to move mouse to target color.
+    
+    x, y = pyautogui.position()  # Get initial cursor position
+    prev_color = get_pixel_color(x, y)  # Get initial color
+    
+    while True:
+        try:
+            current_color = get_pixel_color(x, y)  # Get current color
+            if current_color != prev_color:
+                pyautogui.click()  # Click if color changes
+                print(f"Color changed at ({x},{y}). Clicked!")
+                prev_color = current_color  # Update color
+            time.sleep(0.1)  # Prevent excessive CPU usage
+        except KeyboardInterrupt:
+            print("\nStopped.")
+            break
+
+if __name__ == "__main__":
+    main()
