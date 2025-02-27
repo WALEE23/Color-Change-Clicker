@@ -1,0 +1,16 @@
+import pyautogui # controls mouse and keyboard
+import mss # multiple screen shots， allows program to pull pixel data from RAM via system level API
+import time
+
+time.sleep(1)  # Short delay to move mouse before running. 
+
+x, y = pyautogui.position()
+
+with mss.mss() as sct:
+    prev = sct.grab({"left": x, "top": y, "width": 1, "height": 1}).rgb  # Get raw RGB bytes, instead of comparing colors, any change in RGB Bytes = CLICK.
+
+    while True:
+        img = sct.grab({"left": x, "top": y, "width": 1, "height": 1}).rgb  # Capture 1-pixel 
+        if img != prev and img == b'\x4b\xdb\x6a':  # (75, 219, 106) in raw RGB bytes
+            pyautogui.click()
+            break  # Exit 
